@@ -51,6 +51,8 @@ airflow-init
 
 Inicialización de la base de datos de Airflow
 
+
+
 🔧 Configuración
 
 Antes de ejecutar los contenedores, se deben definir algunas variables de entorno para asegurar que Airflow funcione correctamente. Ejecuta los siguientes comandos en la terminal:
@@ -115,8 +117,8 @@ Si tienes problemas con permisos, revisa la configuración de volúmenes y usa c
 
 
 📌 Servicios y Puertos
-Servicio	Puerto	Descripción
-PostgreSQL	5432	Base de datos de Airflow
-TimescaleDB	5433	Base de datos para series temporales
-Redis	6379	Cola de mensajes de Airflow
+Servicio	    Puerto	Descripción
+PostgreSQL	    5432	Base de datos de Airflow
+TimescaleDB	    5433	Base de datos para series temporales
+Redis	        6379	Cola de mensajes de Airflow
 Airflow Web UI	8080	Interfaz gráfica de Airflow
