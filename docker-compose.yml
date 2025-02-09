@@ -21,10 +21,10 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     ports:
-      - "5433:5432"  # Evitar conflictos con PostgreSQL
+      - "5433:5432"
     volumes:
       - timescaledb-data:/var/lib/postgresql/data
-      - ./proyecto:/opt/proyecto:rw  # Mapea toda la carpeta correctamente
+      - ./proyecto:/opt/proyecto:rw
     networks:
       - airflow_network
 
@@ -39,14 +39,18 @@ services:
       - postgres
       - redis
       - airflow-init
+    env_file:
+      - .env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "true"
       _AIRFLOW_WWW_USER_USERNAME: "admin"
       _AIRFLOW_WWW_USER_PASSWORD: "admin"
+      AIRFLOW__API__AUTH_BACKEND: "airflow.api.auth.backend.basic_auth"
+
     volumes:
-      - /opt/proyecto:/opt/proyecto:rw  # Volumen corregido
+      - /opt/proyecto:/opt/proyecto:rw
       - /opt/proyecto/dags:/opt/airflow/dags:rw
       - /opt/proyecto/logs:/opt/airflow/logs:rw
       - ./plugins:/opt/airflow/plugins
@@ -65,6 +69,9 @@ services:
       airflow webserver"
     networks:
       - airflow_network
+    build:
+      context: .
+      dockerfile: Dockerfile
 
   airflow-scheduler:
     image: apache/airflow:2.10.4
@@ -72,12 +79,14 @@ services:
       - postgres
       - redis
       - airflow-init
+    env_file:
+      - .env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "true"
     volumes:
-      - /opt/proyecto:/opt/proyecto:rw  # Volumen corregido
+      - /opt/proyecto:/opt/proyecto:rw
       - /opt/proyecto/dags:/opt/airflow/dags:rw
       - /opt/proyecto/logs:/opt/airflow/logs:rw
       - ./plugins:/opt/airflow/plugins
@@ -85,18 +94,23 @@ services:
     command: ["scheduler"]
     networks:
       - airflow_network
+    build:
+      context: .
+      dockerfile: Dockerfile
 
   airflow-init:
     image: apache/airflow:2.10.3
     depends_on:
       - postgres
       - redis
+    env_file:
+      - .env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "true"
     volumes:
-      - /opt/proyecto:/opt/proyecto:rw  # Volumen corregido
+      - /opt/proyecto:/opt/proyecto:rw
       - /opt/proyecto/dags:/opt/airflow/dags:rw
       - /opt/proyecto/logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
@@ -104,6 +118,9 @@ services:
     entrypoint: ["airflow", "db", "init"]
     networks:
       - airflow_network
+    build:
+      context: .
+      dockerfile: Dockerfile
 
 volumes:
   postgres-db-volume:
