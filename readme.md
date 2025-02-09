@@ -11,6 +11,16 @@ Este proyecto proporciona un entorno completo para ejecutar Apache Airflow con P
 ├── plugins/     # Plugins adicionales para Airflow
 └── docker-compose.yml
 
+Ejecuta el siguiente script para configurar las rutas necesarias:
+
+```sh
+# Crear directorios
+mkdir -p /opt/proyecto/dags
+mkdir -p /opt/proyecto/logs
+mkdir -p /opt/proyecto/scripts
+mkdir -p /opt/proyecto/plugins
+```
+
 ⚙️ Servicios Incluidos
 
 Servicio
@@ -103,3 +113,10 @@ Los DAGs deben guardarse en la carpeta dags/ dentro del directorio del proyecto.
 
 Si tienes problemas con permisos, revisa la configuración de volúmenes y usa chmod para dar permisos de escritura en /opt/proyecto/.
 
+
+📌 Servicios y Puertos
+Servicio	Puerto	Descripción
+PostgreSQL	5432	Base de datos de Airflow
+TimescaleDB	5433	Base de datos para series temporales
+Redis	6379	Cola de mensajes de Airflow
+Airflow Web UI	8080	Interfaz gráfica de Airflow
