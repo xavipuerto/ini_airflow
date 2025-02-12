@@ -1,0 +1,38 @@
+name: CI Airflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-airflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: 🐳 Instalar Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: 🚀 Levantar Airflow con Docker Compose
+        run: |
+          docker compose up -d
+          sleep 60  # Esperar a que los servicios se levanten
+
+      - name: ✅ Comprobar contenedores en ejecución
+        run: docker ps
+
+      - name: 🧪 Ejecutar pruebas
+        run: |
+          docker exec airflow-webserver airflow version
